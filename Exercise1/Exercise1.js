@@ -94,6 +94,14 @@ function setUpBuffers(){
         0.9, 0.9,
         0.4, 0.4,
         0.4, 0.9,
+// --------------
+        0.2, 0.2,
+        0.2, 0.1,
+        0.1, 0.1,
+
+        0.2, 0.2,
+        0.1, 0.1,
+        0.1, 0.2,
     ];
     gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ctx.vertices), gl.STATIC_DRAW);
@@ -113,13 +121,20 @@ function setUpBuffers(){
         0.0,  0.0,  1.0,  1.0,    // blue
         0.0,  0.0,  1.0,  1.0,    // blue
         0.0,  0.0,  1.0,  1.0,    // blue
-        //---------------------------------
+//---------------------------------
         0.0,  1.0,  0.0,  1.0,    // green
         0.0,  1.0,  0.0,  1.0,    // green
         0.0,  1.0,  0.0,  1.0,    // green
         0.0,  1.0,  0.0,  1.0,    // green
         0.0,  1.0,  0.0,  1.0,    // green
         0.0,  1.0,  0.0,  1.0,    // green
+//---------------------------------
+        1.0,  0.0,  0.0,  1.0,    // red
+        1.0,  0.0,  0.0,  1.0,    // red
+        1.0,  0.0,  0.0,  1.0,    // red
+        1.0,  0.0,  0.0,  1.0,    // red
+        1.0,  0.0,  0.0,  1.0,    // red
+        1.0,  0.0,  0.0,  1.0,    // red
     ];
     gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ctx.colors), gl.STATIC_DRAW);
