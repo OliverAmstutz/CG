@@ -116,22 +116,10 @@ function draw() {
 function setupRectangleAndColorBuffer() {
     rectangleObject.positionBuffer = gl.createBuffer();
     rectangleObject.vertices = [
-        /*1.0, 1.0,
-        0.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0,*/
-        -1.0, -1.0,
-        0.0, -1.0,
-        0.0, 0.0,
-        -1.0, 0.0,
-        /*1.0, 1.0,
-        -1.0, 1.0,
-        -1.0, -1.0,
-        1.0, -1.0,*/
-        /*0.5, 0.5,
+        0.5, 0.5,
         -0.5, 0.5,
         -0.5, -0.5,
-        0.5, -0.5,*/
+        0.5, -0.5,
     ];
     gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(rectangleObject.vertices), gl.STATIC_DRAW);
@@ -172,7 +160,8 @@ function drawTexture() {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, lennaTxt.textureObj);
     gl.uniform1i(ctx.uSampler2DId, 0);
-    //is this the right location for assigning the buffer?
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.textureBuffer);
     gl.vertexAttribPointer(ctx.aVertexTextureCoord, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(ctx.aVertexTextureCoord);
 
@@ -214,17 +203,15 @@ function loadTexture() {
 }
 
 function setupTextureBuffer() {
-
-    //WebGL forces all the texture coordinates into a 0 to 1 range, where [0, 0] represents the top left-hand side corner of the texture and [1, 1] represents the bottom right-hand side corner
+    //WebGL forces all the texture coordinates into a 0 to 1 range.
+    //[0, 0] represents the top left-hand side corner of the texture .
+    //[1, 1] represents the bottom right-hand side corner.
+    //Counter clock rotation.
     var textureCoord = [
-        /*1.0, 0.0,
-        0.0, 0.0,
+        1.0, 1.0,
         0.0, 1.0,
-        1.0, 1.0,*/
-        0.5, 0.5,
-        0.0, 0.5,
         0.0, 0.0,
-        0.5, 0.0,
+        1.0, 0.0,
     ];
 
     rectangleObject.textureBuffer = gl.createBuffer();
