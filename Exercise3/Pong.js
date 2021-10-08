@@ -16,7 +16,8 @@ var ctx = {
     aVertexPositionId: -1,
     uColorId: -1,
     uProjectionMatId: -1,
-    uModelMatId: -1
+    uModelMatId: -1,
+    currentTime: 0
 };
 
 // we keep all the parameters for drawing a specific object together
@@ -34,7 +35,8 @@ function startup() {
     initGL();
     window.addEventListener('keyup', onKeyup, false);
     window.addEventListener('keydown', onKeydown, false);
-    draw();
+    //draw();
+    drawAnimated(1);
 }
 
 /**
@@ -96,18 +98,36 @@ function moveAndDrawObject(translation, scale, red, green, blue, alpha) {
  */
 function draw() {
     "use strict";
-    console.log("Drawing");
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
     gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(ctx.aVertexPositionId);
     convertToNormalizedScreenCoordinates();
-    
-    moveAndDrawObject([-350, -150], [0.1, 0.5], 1, 0, 0, 1);    //left paddle
-    moveAndDrawObject([350, 150], [0.1, 0.5], 0, 0, 1, 1); //right paddle
+
+    moveAndDrawObject([paddle1.x, paddle1.y], [paddle1.scaleX, paddle1.scaleY], 1, 0, 0, 1);    //left paddle
+    moveAndDrawObject([paddle2.x, paddle2.y], [paddle2.scaleX, paddle2.scaleY], 0, 0, 1, 1);    //left paddle
+    moveAndDrawObject([ball.x, ball.y], [ball.scaleX, ball.scaleY], 1, 1, 1, 1);    //left paddle
     moveAndDrawObject([0, 0], [0.02, 8], 1, 1, 1, 0.15); //middle line
-    moveAndDrawObject([50, 50], [0.1, 0.1], 1, 1, 1, 1); //ball
+
+}
+
+function drawAnimated(timeStamp) {
+    const elapsedTime = timeStamp - ctx.currentTime;
+    ctx.currentTime = timeStamp;
+
+    updateBallPosition(elapsedTime);
+    checkGameLogic();
+    draw();
+    window.requestAnimationFrame(drawAnimated)
+}
+
+function updateBallPosition(elapsedTime) {
+    var newBallPosX = ball.x + ball.speed * ball.xDir * elapsedTime;
+    var newBallPosY = ball.y + ball.speed * ball.yDir * elapsedTime;
+    ball.x = newBallPosX;
+    ball.y = newBallPosY;
+    moveAndDrawObject([newBallPosX, newBallPosY], [0.1, 0.1], 1, 1, 1, 1);
 }
 
 // Key Handling
