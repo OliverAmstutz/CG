@@ -223,7 +223,7 @@ function setupTextureBuffer() {
 function setupWithOnlyOneBuffer() {
     //with only 1 buffer:
     ctx.posAndColor = [
-        -0.4, -0.4, 0.0, 0.0, 1.0, 1.0,    // blue
+        -0.4, -0.4, 0.0, 0.0, 1.0, 1.0,    // x,y,r,g,b,a - blue
         -0.4, 0.4, 1.0, 0.0, 0.0, 1.0,    // red
         0.4, 0.4, 0.0, 1.0, 0.0, 1.0,    // green
         0.4, -0.4, 1.0, 0.0, 0.0, 1.0,    // red
