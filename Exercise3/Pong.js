@@ -105,8 +105,8 @@ function draw() {
     gl.enableVertexAttribArray(ctx.aVertexPositionId);
     convertToNormalizedScreenCoordinates();
 
-    moveAndDrawObject([paddle1.x, paddle1.y], [paddle1.scaleX, paddle1.scaleY], 1, 0, 0, 1);    //left paddle
-    moveAndDrawObject([paddle2.x, paddle2.y], [paddle2.scaleX, paddle2.scaleY], 0, 0, 1, 1);    //left paddle
+    moveAndDrawObject([paddle1.x, paddle1.y], [paddle1.scaleX, paddle1.scaleY], 0, 0, 1, 1);    //left paddle
+    moveAndDrawObject([paddle2.x, paddle2.y], [paddle2.scaleX, paddle2.scaleY], 1, 0, 0, 1);    //left paddle
     moveAndDrawObject([ball.x, ball.y], [ball.scaleX, ball.scaleY], 1, 1, 1, 1);    //left paddle
     moveAndDrawObject([0, 0], [0.02, 8], 1, 1, 1, 0.15); //middle line
 
@@ -115,11 +115,15 @@ function draw() {
 function drawAnimated(timeStamp) {
     const elapsedTime = timeStamp - ctx.currentTime;
     ctx.currentTime = timeStamp;
-
+    updatePaddle2Position(elapsedTime);
     updateBallPosition(elapsedTime);
     checkGameLogic();
     draw();
     window.requestAnimationFrame(drawAnimated)
+}
+
+function updatePaddle2Position(elapsedTime) {
+    paddle2.y = newPaddle2PosY = Math.max(Math.min(paddle2.y + paddle2.speed * paddle2.yDir * elapsedTime, 300), -300);
 }
 
 function updateBallPosition(elapsedTime) {
@@ -127,7 +131,6 @@ function updateBallPosition(elapsedTime) {
     var newBallPosY = ball.y + ball.speed * ball.yDir * elapsedTime;
     ball.x = newBallPosX;
     ball.y = newBallPosY;
-    moveAndDrawObject([newBallPosX, newBallPosY], [0.1, 0.1], 1, 1, 1, 1);
 }
 
 // Key Handling
