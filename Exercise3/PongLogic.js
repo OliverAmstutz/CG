@@ -14,7 +14,7 @@ paddle1 = {
     y: 0,
     scaleX: 0.1,
     scaleY: 0.5,
-    speed: 0.2,
+    speed: 0.5,
     height: 50,
     width: 10,
     directionThreshold: 20,
@@ -26,7 +26,7 @@ var paddle2 = {
     y: 0,
     scaleX: 0.1,
     scaleY: 0.5,
-    speed: 0.2,
+    speed: 0.3,
     height: 50,
     width: 10,
     directionThreshold: 20,
@@ -36,6 +36,7 @@ var paddle2 = {
 function checkGameLogic() {
     reflectFromWalls();
     checkBounceOffPaddle();
+    playerPaddleLogic();
     enemyPaddleLogic();
 }
 
@@ -44,7 +45,7 @@ function checkBounceOffPaddle() {
         if (ball.x + ball.size / 2 > paddle2.x - paddle2.width / 2 && ball.y < paddle2.y + (paddle2.height / 2) && ball.y > paddle2.y - (paddle2.height / 2)) {
             if (Math.abs(ball.y - paddle2.y) > paddle2.directionThreshold) {
                 //add to ball direction
-                ball.xDir = -2 * ball.xDir;
+                ball.xDir = -1.25 * ball.xDir;
             } else {
                 //reflect
                 ball.xDir = -ball.xDir;
@@ -57,7 +58,7 @@ function checkBounceOffPaddle() {
         if (ball.x - ball.size / 2 < paddle1.x + paddle1.width / 2 && ball.y < paddle1.y + (paddle1.height / 2) && ball.y > paddle1.y - (paddle1.height / 2)) {
             if (Math.abs(ball.y - paddle1.y) > paddle1.directionThreshold) {
                 //add to ball direction
-                ball.xDir = -2 * ball.xDir;
+                ball.xDir = -1.25 * ball.xDir;
             } else {
                 //reflect
                 ball.xDir = -ball.xDir;
@@ -77,6 +78,10 @@ function enemyPaddleLogic() {
     } else {
         paddle2.yDir = 0;
     }
+
+}
+
+function playerPaddleLogic() {
 
 }
 

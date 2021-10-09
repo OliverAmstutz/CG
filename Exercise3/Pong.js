@@ -115,15 +115,16 @@ function draw() {
 function drawAnimated(timeStamp) {
     const elapsedTime = timeStamp - ctx.currentTime;
     ctx.currentTime = timeStamp;
-    updatePaddle2Position(elapsedTime);
+    updatePaddlePositions(elapsedTime);
     updateBallPosition(elapsedTime);
     checkGameLogic();
     draw();
     window.requestAnimationFrame(drawAnimated)
 }
 
-function updatePaddle2Position(elapsedTime) {
-    paddle2.y = newPaddle2PosY = Math.max(Math.min(paddle2.y + paddle2.speed * paddle2.yDir * elapsedTime, 300), -300);
+function updatePaddlePositions(elapsedTime) {
+    paddle1.y = newPaddle1PosY = Math.max(Math.min(paddle1.y + paddle1.speed * paddle1.yDir * elapsedTime, 300 - paddle1.height / 2), -300 + paddle1.height / 2);
+    paddle2.y = newPaddle2PosY = Math.max(Math.min(paddle2.y + paddle2.speed * paddle2.yDir * elapsedTime, 300 - paddle1.height / 2), -300 + paddle1.height / 2);
 }
 
 function updateBallPosition(elapsedTime) {
@@ -133,24 +134,6 @@ function updateBallPosition(elapsedTime) {
     ball.y = newBallPosY;
 }
 
-// Key Handling
-var key = {
-    _pressed: {},
 
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40
-};
 
-function isDown(keyCode) {
-    return key._pressed[keyCode];
-}
 
-function onKeydown(event) {
-    key._pressed[event.keyCode] = true;
-}
-
-function onKeyup(event) {
-    delete key._pressed[event.keyCode];
-}
