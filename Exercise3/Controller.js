@@ -21,6 +21,13 @@ function onKeydown(event) {
     if (event.keyCode == key.RIGHT) {
         paddle1.yDir = -1;
     }
+    if (event.keyCode == key.UP) {
+        paddle1.yDir = 1;
+    }
+
+    if (event.keyCode == key.DOWN) {
+        paddle1.yDir = -1;
+    }
 }
 
 function onKeyup(event) {

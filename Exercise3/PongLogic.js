@@ -2,11 +2,12 @@ var ball = {
     x: 0,
     y: 0,
     xDir: 1,
-    yDir: 1.07,
+    yDir: 1.2,
     scaleX: 0.1,
     scaleY: 0.1,
-    speed: 0.2,
+    speed: 0.1,
     size: 10,
+    speedUpFactor: 1.25
 };
 
 paddle1 = {
@@ -14,7 +15,7 @@ paddle1 = {
     y: 0,
     scaleX: 0.1,
     scaleY: 0.5,
-    speed: 0.5,
+    speed: 0.3,
     height: 50,
     width: 10,
     directionThreshold: 20,
@@ -42,10 +43,10 @@ function checkGameLogic() {
 
 function checkBounceOffPaddle() {
     if (ball.xDir > 0) {
-        if (ball.x + ball.size / 2 > paddle2.x - paddle2.width / 2 && ball.y < paddle2.y + (paddle2.height / 2) && ball.y > paddle2.y - (paddle2.height / 2)) {
+        if ((ball.x + ball.size / 2 > paddle2.x - paddle2.width / 2) && (ball.y < paddle2.y + (paddle2.height / 2)) && (ball.y > paddle2.y - (paddle2.height / 2))) {
             if (Math.abs(ball.y - paddle2.y) > paddle2.directionThreshold) {
                 //add to ball direction
-                ball.xDir = -1.25 * ball.xDir;
+                ball.xDir = -ball.speedUpFactor * ball.xDir;
             } else {
                 //reflect
                 ball.xDir = -ball.xDir;

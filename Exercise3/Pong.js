@@ -86,7 +86,7 @@ function convertToNormalizedScreenCoordinates() {
 
 function moveAndDrawObject(translation, scale, red, green, blue, alpha) {
     var modelMat = mat3.create();
-    mat3.translate(modelMat, modelMat, translation);
+    mat3.fromTranslation(modelMat, translation);
     mat3.scale(modelMat, modelMat, scale);
     gl.uniformMatrix3fv(ctx.uModelMatId, false, modelMat);
     gl.uniform4f(ctx.uColorId, red, green, blue, alpha);
