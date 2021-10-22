@@ -17,7 +17,11 @@ var ctx = {
     aVertexPositionId: -1,
     uModelViewMatrixId: -1,
     uProjectionMatrixId: -1,
+    uModelMatrixId: -1,
     uColorId: -1,
+    currentTime: 0,
+    cubeAngle: 0,
+    cubeRotationSpeed: 0.015, //Rev/Millisecond
 };
 
 var wiredCube;
@@ -30,9 +34,11 @@ function startup() {
     var canvas = document.getElementById("myCanvas");
     gl = createGLContext(canvas);
     initGL();
-    //window.addEventListener('keyup', onKeyup, false);
-    //window.addEventListener('keydown', onKeydown, false);
-    draw();
+    window.addEventListener('keyup', onKeyup, false);
+    window.addEventListener('keydown', onKeydown, false);
+
+    //draw();
+    drawAnimated(1);
 }
 
 /**
@@ -55,6 +61,7 @@ function setUpAttributesAndUniforms() {
     ctx.aVertexPositionId = gl.getAttribLocation(ctx.shaderProgram, "aVertexPosition");
     ctx.uModelViewMatrixId = gl.getUniformLocation(ctx.shaderProgram, "uModelViewMatrix");
     ctx.uProjectionMatrixId = gl.getUniformLocation(ctx.shaderProgram, "uProjectionMatrix");
+    ctx.uModelMatrixId = gl.getUniformLocation(ctx.shaderProgram, "uModelMatrix");
     ctx.uColorId = gl.getUniformLocation(ctx.shaderProgram, "uColor");
 }
 
@@ -71,46 +78,54 @@ function setUpBuffers() {
  */
 function draw() {
     "use strict";
-    console.log("Drawing");
+    //console.log("Drawing");
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    camera();
+    //cameraStationary();
+    cameraDynamic();
 
-    wiredCube.draw(gl, ctx.aVertexPositionId, ctx.uColorId);
+    wiredCube.draw(gl, ctx.aVertexPositionId, ctx.uColorId, ctx.cubeAngle);
 }
 
-function camera() {
+function cameraStationary() {
     var modelMatrix = mat4.create();
-    mat4.lookAt(modelMatrix, [-2, 0, 0], [0, 0, 0], [0, 1, 0]);
+    mat4.lookAt(modelMatrix, [1.5, 0.75, 1.5], [0, 0, 0], [0, 1.5, 0]);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelMatrix);
 
     var projectionMatrix = mat4.create();
-    mat4.ortho(projectionMatrix, -1, 1, -1, 1, 0.1, 9); //relative
+    //mat4.ortho(projectionMatrix, -1, 1, -1, 1, 0.1, 10); //relative
+    //mat4.frustum(projectionMatrix, -1, 1, -1, 1, 1, 9); //relative
+
+    var angleInRad = 45 * Math.PI / 180;
+    mat4.perspective(projectionMatrix, angleInRad, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 20); //relative
+
     gl.uniformMatrix4fv(ctx.uProjectionMatrixId, false, projectionMatrix);
 
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 }
 
-// Key Handling
-/*
-var key = {
-    _pressed: {},
-
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40
-};
-
-function isDown(keyCode) {
-    return key._pressed[keyCode];
+function drawAnimated(timeStamp) {
+    const elapsedTime = timeStamp - ctx.currentTime;
+    ctx.currentTime = timeStamp;
+    moveCube(elapsedTime);
+    draw();
+    window.requestAnimationFrame(drawAnimated)
 }
 
-function onKeydown(event) {
-    key._pressed[event.keyCode] = true;
+function moveCube(elapsedTime) {
+    ctx.cubeAngle = (ctx.cubeAngle + (elapsedTime * ctx.cubeRotationSpeed)) % 360;
 }
 
-function onKeyup(event) {
-    delete key._pressed[event.keyCode];
+function cameraDynamic() {
+    var modelMatrix = mat4.create();
+    mat4.lookAt(modelMatrix, [1.5, 0.75, 1.5], [0, 0, 0], [0, 1.5, 0]);
+    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelMatrix);
+
+    var projectionMatrix = mat4.create();
+    var angleInRad = 45 * Math.PI / 180;
+    mat4.perspective(projectionMatrix, angleInRad, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 20); //relative
+
+    gl.uniformMatrix4fv(ctx.uProjectionMatrixId, false, projectionMatrix);
+
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 }
-*/

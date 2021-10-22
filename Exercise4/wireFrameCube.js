@@ -3,16 +3,23 @@ function WireFrameCube(gl, color) {
         bufferVertices: defineVertices(gl),
         bufferEdges: defineEdges(gl),
         color: color,
-        draw: function (gl, aVertexPositionId, aVertexColorId) {
+        draw: function (gl, aVertexPositionId, aVertexColorId, angle) {
+
+            var modelMatrix = mat4.create();
+            var angleToRotate = angle * Math.PI / 180;
+            mat4.fromRotation(modelMatrix, angleToRotate, [0, 1, 0]);
+            gl.uniformMatrix4fv(ctx.uModelMatrixId, false, modelMatrix);
+
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferVertices);
             gl.vertexAttribPointer(aVertexPositionId, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(aVertexPositionId);
+
 
             gl.uniform4f(aVertexColorId, color.x, color.y, color.z, color.w);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferEdges);
             gl.drawElements(gl.LINES, 24, gl.UNSIGNED_SHORT, 0); //24 = No. of indices
-            //drawElements must be lastest call!
+            //drawElements must be last method call!
         }
     };
 }
