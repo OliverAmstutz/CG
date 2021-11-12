@@ -31,7 +31,12 @@ var drawingObjects = {
     solidCubeSC: null,
     solidCubeTX: null,
     solidSphereSC: null,
-    blue: []
+    red: [1,0,0],
+    green: [0,1,0],
+    blue: [0,0,1],
+    yellow: [1,1,0],
+    teal: [0,1,1],
+    mangenta: [1,0,1],
 
 };
 
@@ -59,9 +64,9 @@ function initGL() {
 }
 
 function defineObjects() {
-    drawingObjects.solidCubeSC = new SolidCube(gl, [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0], [1.0, 1.0, 0.0], [0.0, 0.0, 1.0], [0.0, 1.0, 1.0] );
-    //drawingObjects.solidCubeTX = new SolidCube(gl, [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0] );
-    drawingObjects.solidSphereSC = new SolidSphere(gl, 20,20, [0.0, 1.0, 0.0])
+    drawingObjects.solidCubeSC = new SolidCube(gl, drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta );
+    drawingObjects.solidCubeTX = new SolidCube(gl,  drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta);
+    drawingObjects.solidSphereSC = new SolidSphere(gl, 20,20, drawingObjects.red)
 }
 
 /**
@@ -103,10 +108,6 @@ function draw(timestamp) {
 
     gl.uniformMatrix4fv(ctx.uProjectionMatrixId, false, projectionMatrix);
 
-    //drawingObjects.solidCubeSC.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.aVertexNormalId);
-
-    //drawingObjects.solidCubeTX.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.uEnableTextureId);
-
     mat4.translate(modelViewMatrix, modelViewMatrix, [2,0,0]);
     mat4.scale(modelViewMatrix, modelViewMatrix, [0.5,0.5,0.5]);
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
@@ -119,6 +120,14 @@ function draw(timestamp) {
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     drawingObjects.solidCubeSC.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.aVertexNormalId);
+
+    mat4.rotateZ(modelViewMatrix, modelViewMatrix, -angle);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [2,-1,0]);
+    mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
+    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
+    gl.uniform1i(ctx.uEnableTextureId, 1);
+    drawingObjects.solidCubeTX.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.aVertexNormalId);
+    gl.uniform1i(ctx.uEnableTextureId, 0);
 
 }
 

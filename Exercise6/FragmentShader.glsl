@@ -23,10 +23,10 @@ void main() {
     if (uEnableTexture) {
         baseColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
     }
-
-    /*if (uEnableLighting) {
+/*
+    if (uEnableLighting) {
         // calculate light direction as seen from the vertex position
-        vec3 lightDirectionEye = ;
+        /*vec3 lightDirectionEye = ;
         vec3 normal = normalize(vNormalEye);
 
         // ambient lighting
