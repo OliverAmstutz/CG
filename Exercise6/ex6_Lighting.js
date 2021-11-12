@@ -60,6 +60,7 @@ function initGL() {
     setUpAttributesAndUniforms();
     defineObjects();
     gl.enable(gl.DEPTH_TEST)
+    gl.uniform1i(ctx.uEnableLightingId, 1);
     gl.clearColor(0.3, 0.3, 0.3, 1);
 }
 
