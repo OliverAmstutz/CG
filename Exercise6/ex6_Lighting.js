@@ -31,12 +31,14 @@ var drawingObjects = {
     solidCubeSC: null,
     solidCubeTX: null,
     solidSphereSC: null,
-    red: [1,0,0],
-    green: [0,1,0],
-    blue: [0,0,1],
-    yellow: [1,1,0],
-    teal: [0,1,1],
-    mangenta: [1,0,1],
+    red: [1, 0, 0],
+    green: [0, 1, 0],
+    blue: [0, 0, 1],
+    yellow: [1, 1, 0],
+    teal: [0, 1, 1],
+    mangenta: [1, 0, 1],
+    lightPosition: [0, 0, 3],
+    lightColor: [1.0, 1.0, 1.0],
 
 };
 
@@ -65,9 +67,9 @@ function initGL() {
 }
 
 function defineObjects() {
-    drawingObjects.solidCubeSC = new SolidCube(gl, drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta );
-    drawingObjects.solidCubeTX = new SolidCube(gl,  drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta);
-    drawingObjects.solidSphereSC = new SolidSphere(gl, 20,20, drawingObjects.red)
+    drawingObjects.solidCubeSC = new SolidCube(gl, drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta);
+    drawingObjects.solidCubeTX = new SolidCube(gl, drawingObjects.red, drawingObjects.blue, drawingObjects.green, drawingObjects.yellow, drawingObjects.teal, drawingObjects.mangenta);
+    drawingObjects.solidSphereSC = new SolidSphere(gl, 20, 20, drawingObjects.red)
 }
 
 /**
@@ -98,7 +100,7 @@ function draw(timestamp) {
     var modelViewMatrix = mat4.create();
     var projectionMatrix = mat4.create();
 
-    var angle = (timestamp / 800)*Math.PI/3;
+    var angle = (timestamp / 800) * Math.PI / 3;
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); //Added Z-Buffer Clear
 
@@ -109,22 +111,40 @@ function draw(timestamp) {
 
     gl.uniformMatrix4fv(ctx.uProjectionMatrixId, false, projectionMatrix);
 
-    mat4.translate(modelViewMatrix, modelViewMatrix, [2,0,0]);
-    mat4.scale(modelViewMatrix, modelViewMatrix, [0.5,0.5,0.5]);
+    //normals to shader
+    var normalMatrix = mat3.create();
+    //gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
+    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
+
+    //light to shader
+    var lightPositionEye = vec3.create();
+    vec3.transformMat4(lightPositionEye, drawingObjects.lightPosition, modelViewMatrix);
+    gl.uniform3fv(ctx.uLightPositionId, lightPositionEye);
+    gl.uniform3fv(ctx.uLightColorId, drawingObjects.lightColor);
+
+    mat4.translate(modelViewMatrix, modelViewMatrix, [2, 0, 0]);
+    mat4.scale(modelViewMatrix, modelViewMatrix, [0.5, 0.5, 0.5]);
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
+    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     drawingObjects.solidSphereSC.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
 
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, -angle);
-    mat4.scale(modelViewMatrix, modelViewMatrix, [2,2,2]);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [-4,0,0]);
+    mat4.scale(modelViewMatrix, modelViewMatrix, [2, 2, 2]);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [-4, 0, 0]);
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
+    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     drawingObjects.solidCubeSC.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.aVertexNormalId);
 
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, -angle);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [2,-1,0]);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [2, -1, 0]);
     mat4.rotateZ(modelViewMatrix, modelViewMatrix, angle);
+    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     gl.uniform1i(ctx.uEnableTextureId, 1);
     drawingObjects.solidCubeTX.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexTextureCoordId, ctx.aVertexNormalId);
