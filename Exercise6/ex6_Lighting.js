@@ -37,7 +37,7 @@ var drawingObjects = {
     yellow: [1, 1, 0],
     teal: [0, 1, 1],
     mangenta: [1, 0, 1],
-    lightPosition: [0, 0, 3],
+    lightPosition: [4, 4, 0],
     lightColor: [1.0, 1.0, 1.0],
 
 };

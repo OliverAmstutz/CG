@@ -38,21 +38,20 @@ void main() {
         float cos_angle = clamp(dot(normal, lightDirectionEye), 0.0, 1.0);
         vec3 diffuseColor = baseColor.rgb *uLightColor * cos_angle;
 
+        // specular lighting
+        float diffuseFactor = 0.5;
+        vec3 specularColor = vec3(0, 0, 0);
 
-        /*
-                // specular lighting
-                vec3 specularColor = vec3(0, 0, 0);
-                if (diffuseFactor > 0.0) {
-                   vec3 reflectionDir = uLightPosition;
-                   vec3 eyeDir = vNormalEye;
-                   float cosPhi = cos(normal); //Printscreen implementation stimmt nict -> see slide
-                   float specularFactor = 1.0;
-                   specularColor = reflectionDir*pow(cosPhi,specularFactor);
-                }*/
+        if (diffuseFactor > 0.0) {
+            vec3 reflectionDir = normalize(reflect(lightDirectionEye, normal));
+            vec3 eyeDir = normalize(vVertexPositionEye3);
+            float cosPhi = clamp(dot(reflectionDir, eyeDir), 0.0, 1.0);
+            float specularFactor = shininess;
+            specularColor = normalize(specularMaterialColor+uLightColor)*pow(cosPhi, specularFactor);
+        }
 
-        //vec3 color = ambientColor;
-        vec3 color = ambientColor+ diffuseColor;
-        //vec3 color = ambientColor + diffuseColor + specularColor;
+        vec3 color = ambientColor+ diffuseColor + specularColor;
+        //vec3 color = specularColor;
         gl_FragColor = vec4(color, 1.0);
     }
     else {
