@@ -39,7 +39,7 @@ void main() {
         vec3 diffuseColor = baseColor.rgb *uLightColor * cos_angle;
 
         // specular lighting
-        float diffuseFactor = 0.5;
+        float diffuseFactor = cos_angle;
         vec3 specularColor = vec3(0, 0, 0);
 
         if (diffuseFactor > 0.0) {
